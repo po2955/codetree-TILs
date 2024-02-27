@@ -57,6 +57,8 @@ for j in range(m):
             board[i][j].clear()
             move_mold()
             signal = 1
-        if signal == 1:
             break
+    if signal == 0:
+        move_mold()
+    
 print(answer)
