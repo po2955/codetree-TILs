@@ -21,7 +21,8 @@ def move_moving_walk():
     safe.insert(0, a)
     b = people.pop()
     people.insert(0, b)
-
+    if people[-1] == 1:
+        people[-1] = 0
 def move_people():
     
     for i in range(len(people)-2, -1, -1):
