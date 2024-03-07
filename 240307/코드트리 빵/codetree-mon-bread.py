@@ -10,6 +10,7 @@ for i in range(1, m+1):
 
 cant_base = []
 cant_store = []
+xxx_yyy = []
 
 def place_people_base():
     global minute
@@ -57,14 +58,20 @@ def find_convinience_store(x, y, people):
                     while xx != x or yy != y:
                         xxx, yyy = xx, yy
                         xx, yy = board_trace[xx][yy]
-                    board_people[xxx][yyy].append(people)
+                    xxx_yyy.append((xxx, yyy, people))
+                    # board_people[xxx][yyy].append(people)
+                    return
 
 def move_people():
     for i in range(n):
         for j in range(n):
             if board_people[i][j]:
                 while board_people[i][j]:
-                    find_convinience_store(i, j, board_people[i][j].pop())
+                    people = board_people[i][j].pop()
+                    find_convinience_store(i, j, people)
+    if xxx_yyy:
+        for x, y, people in xxx_yyy:
+            board_people[x][y].append(people)
 
 def cant_pass():
     if cant_base:
@@ -73,7 +80,7 @@ def cant_pass():
         cant_base.clear()
     if cant_store:
         for x, y in cant_store:
-            board[x][y] = -(100 + board[x][y])
+            board[x][y] = -(board[x][y])
         cant_store.clear()
 
 def is_Finished():
@@ -92,17 +99,11 @@ place_people_base()
 minute = 2
 round = 1
 while 1:
-
     move_people()
+    cant_pass()
     if minute <= m:
         place_people_base()
-    cant_pass()    
-    if is_Finished() == True:
-        break
-
-    minute += 1
-    round += 1
-
+    cant_pass()
     # for x in board:
     #     print(x, end =' ')
     #     print()
@@ -111,4 +112,9 @@ while 1:
     #     print(x, end =' ')
     #     print()
     # print()
+
+    if is_Finished() == True:
+        break
+    minute += 1
+    round += 1
 print(minute)
