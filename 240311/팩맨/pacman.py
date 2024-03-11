@@ -64,44 +64,72 @@ def move_packman():
                 pack = board[i][j].pop()
                 maximum = -123123
                 cnt = 0
+                list_first = []
+                list_second = []
+                list_third = []
                 for k in range(4):
                     nx = i + dx_p[k]
                     ny = j + dy_p[k]
                     a = 0
                     if 0 <= nx < 4 and 0 <= ny < 4:
                         if board[nx][ny]:
-                            for x in board[nx][ny]:
-                                if x > 0:
+                            for m in range(len(board[nx][ny])):
+                                if board[nx][ny][m] > 0:
                                     cnt += 1
                                     a += 1
+                                    list_first.append(board[nx][ny][m])
+                                    board[nx][ny][m] = -100
                         for q in range(4):
                             nxx = nx + dx_p[q]
                             nyy = ny + dy_p[q]
                             b = 0
                             if 0 <= nxx < 4 and 0 <= nyy < 4:
                                 if board[nxx][nyy]:
-                                    for x in board[nxx][nyy]:
-                                        if x > 0:
+                                    for n in range(len(board[nxx][nyy])):
+                                        if board[nxx][nyy][n] > 0:
                                             cnt += 1
                                             b += 1
+                                            list_second.append(board[nxx][nyy][n])
+                                            board[nxx][nyy][n] = -100
                                 for p in range(4):
                                     nxxx = nxx + dx_p[p]
                                     nyyy = nyy + dy_p[p]
                                     c = 0
                                     if 0 <= nxxx < 4 and 0 <= nyyy < 4:
                                         if board[nxxx][nyyy]:
-                                            for x in board[nxxx][nyyy]:
-                                                if x > 0:
+                                            for z in range(len(board[nxxx][nyyy])):
+                                                if board[nxxx][nyyy][z] > 0:
                                                     cnt += 1
                                                     c += 1
+                                                    list_third.append(board[nxxx][nyyy][z])
+                                                    board[nxxx][nyyy][z] = -100
                                         if maximum < cnt:
-                                            test =[(nx, ny), (nxx, nyy), (nxxx, nyyy)]
-                                            if test[0] != test[1] and test[0] != test[2] and test[1] != test[2]:   
-                                                maximum = cnt
-                                                check = [(nx, ny), (nxx, nyy), (nxxx, nyyy)]
-                                                # print(check)
+                                            maximum = cnt
+                                            check = [(nx, ny), (nxx, nyy), (nxxx, nyyy)]
+                                            # print(, check)
+                                    
+                                    while list_third:
+                                        third = list_third.pop()
+                                        for o in range(len(board[nxxx][nyyy])):
+                                            if board[nxxx][nyyy][o] == -100:
+                                                board[nxxx][nyyy][o] = third
+                                                break
                                     cnt -= c
-                            cnt -= b
+
+                            while list_second:
+                                second = list_second.pop()
+                                for o in range(len(board[nxx][nyy])):
+                                    if board[nxx][nyy][o] == -100:
+                                        board[nxx][nyy][o] = second
+                                        break
+                            cnt -= b        
+
+                    while list_first:
+                        first = list_first.pop()
+                        for o in range(len(board[nx][ny])):
+                            if board[nx][ny][o] == -100:
+                                board[nx][ny][o] = first
+                                break
                     cnt -= a
     for x, y in check:
         if board[x][y]:
@@ -131,16 +159,17 @@ for turn in range(t):
     copy_monster()
     
     move_monster()
-    # if turn == 1:
-    #     for x in board:
-    #         print(x, end = ' ')
-    #         print()
-    #     print()
+    
     move_packman()
     
     remove_dead()
     
     complete_copy()
+    # for x in board:
+    #     print(x, end = ' ')
+    #     print()
+    # print()
+    # if turn == 1:
     
 answer = 0
 for i in range(4):
