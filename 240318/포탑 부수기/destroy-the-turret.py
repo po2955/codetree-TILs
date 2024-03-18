@@ -93,10 +93,18 @@ def repair():
 for turn in range(1, K + 1):
     attack_x, attack_y = select_attacker(turn)
     defense_x, defense_y = select_defenser()
+    if attack_x == defense_x and attack_y == defense_y:
+        continue
     board[attack_x][attack_y] += (N + M)
     is_attack[attack_x][attack_y], is_attack[defense_x][defense_y] = 1, 1
     attack(attack_x, attack_y, defense_x, defense_y)
     repair()
+    # print('--------------')
+    # for x in board:
+    #     print(x, end = ' ')
+    #     print()
+    # print()
+    
 
 maximum = -12312313123
 for i in range(N):
