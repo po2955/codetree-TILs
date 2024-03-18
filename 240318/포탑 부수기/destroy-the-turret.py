@@ -18,7 +18,6 @@ def select_attacker(turn):
     attacker = check[0]
     x ,y = attacker[4], attacker[3]
     last_attack[x][y] = turn
-    board[x][y] += N + M
     return x, y
 
 def select_defenser():
@@ -94,6 +93,7 @@ def repair():
 for turn in range(1, K + 1):
     attack_x, attack_y = select_attacker(turn)
     defense_x, defense_y = select_defenser()
+    board[attack_x][attack_y] += (N + M)
     is_attack[attack_x][attack_y], is_attack[defense_x][defense_y] = 1, 1
     attack(attack_x, attack_y, defense_x, defense_y)
     repair()
