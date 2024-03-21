@@ -170,8 +170,7 @@ for turn in range(M):
     # print(turn + 1, point)
     # print()    
     count_stun()
-    
-    if no_santa == True:
+    if no_santa() == True:
         break
 
     add_point()
