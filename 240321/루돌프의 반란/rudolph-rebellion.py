@@ -13,13 +13,14 @@ x, y = map(int, input().split())
 x-= 1
 y -= 1
 board[x][y].append(-1)
+stun = [0]
 for santa in range(1, P + 1):
     a, x, y = map(int, input().split())
     x -= 1
     y -= 1
     board[x][y].append(a)
     point.append(0)
-
+    stun.append(0)
 def communication_rudolph(x, y, d):
     santa = board[x][y].pop()
     nx = x + dx_R[d]
@@ -31,7 +32,7 @@ def communication_rudolph(x, y, d):
         else:
             board[nx][ny].append(santa)
 
-def crush_rudolph(d, R_x, R_y):
+def crush_rudolph(d, R_x, R_y, t):
     point[board[R_x][R_y][-1]] += C
     S_nx = R_x + (dx_R[d] * C)
     S_ny = R_y + (dy_R[d] * C)
@@ -41,9 +42,11 @@ def crush_rudolph(d, R_x, R_y):
         if board[S_nx][S_ny]:
             board[S_nx][S_ny].insert(0, santa)
             communication_rudolph(S_nx, S_ny, d)
+            stun[t] = 2
             board_stun[S_nx][S_ny] = 2
         else:
             board[S_nx][S_ny].append(santa)
+            stun[t] = 2
             board_stun[S_nx][S_ny]= 2
 
 def move_rudolph():
@@ -80,7 +83,7 @@ def move_rudolph():
     board[R_nx][R_ny].append(R)
     board[R_nx][R_ny].sort()
     if board[R_nx][R_ny][-1] > 0:
-        crush_rudolph(d, R_nx, R_ny)
+        crush_rudolph(d, R_nx, R_ny, board[R_nx][R_ny][-1])
     return R_nx, R_ny
 
 def communication_santa(x, y, d):
@@ -90,10 +93,11 @@ def communication_santa(x, y, d):
     if 0 <= nx < N and 0 <= ny < N:
         if board[nx][ny]:
             board[nx][ny].insert(0, santa)
+            communication_santa(nx, ny, d)
         else:
             board[nx][ny].append(santa)
 
-def crush_santa(d, S_x, S_y):
+def crush_santa(d, S_x, S_y, t):
     point[board[S_x][S_y][-1]] += D
     santa = board[S_x][S_y].pop()
     d = (d + 2 + 4) % 4
@@ -103,15 +107,17 @@ def crush_santa(d, S_x, S_y):
         if board[S_nx][S_ny]:
             board[S_nx][S_ny].insert(0, santa)
             communication_santa(S_nx, S_ny, d)
+            stun[t] = 2
             board_stun[S_nx][S_ny] = 2
         else:
             board[S_nx][S_ny].append(santa)
             board_stun[S_nx][S_ny] = 2
+            stun[t] = 2
 
 def move_santa(t, R_x, R_y):
     for i in range(N):
         for j in range(N):
-            if board[i][j] and board[i][j][-1] == t and board_stun[i][j] == 0:
+            if board[i][j] and board[i][j][-1] == t and stun[t] == 0:
                 now = (i - R_x) ** 2 + (j - R_y) ** 2
                 check = []
                 for k in range(4):
@@ -133,7 +139,7 @@ def move_santa(t, R_x, R_y):
                     board[S_x][S_y].append(santa)
                     if board[S_x][S_y][0] == -1:
                         board[S_x][S_y].sort()
-                        crush_santa(d, S_x, S_y)
+                        crush_santa(d, S_x, S_y, t)
                     # elif len(board[S_x][S_y]) > 1:
                     #     communication()
                 else:
@@ -141,10 +147,13 @@ def move_santa(t, R_x, R_y):
                 return
 
 def count_stun():
-    for i in range(N):
-        for j in range(N):
-            if board_stun[i][j] > 0:
-                board_stun[i][j] -= 1
+    # for i in range(N):
+    #     for j in range(N):
+    #         if board_stun[i][j] > 0:
+    #             board_stun[i][j] -= 1
+    for i in range(len(stun)):
+        if stun[i] > 0:
+            stun[i] -= 1
 
 def no_santa():
     for i in range(N):
@@ -168,7 +177,7 @@ for turn in range(M):
     #     print(x, end = ' ')
     #     print()
     # print(turn + 1, point)
-    # print()    
+    # print()
     count_stun()
     if no_santa() == True:
         break
