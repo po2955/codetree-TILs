@@ -1,6 +1,6 @@
 from collections import deque
-dx = [-1, 0, 1, 0]
-dy = [0, -1, 0, 1]
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
 N, M, K = map(int, input().split())
 board = [[[] for _ in range(N)] for _ in range(N)]
 for i in range(N):
@@ -11,7 +11,7 @@ for _ in range(M):
     x, y = map(int, input().split())
     x -= 1
     y -= 1
-    board[x][y][0] = 10
+    board[x][y].append(10)
 x, y = map(int, input().split())
 board[x-1][y-1][0] = -1
 move_cnt = 0
@@ -57,7 +57,8 @@ def move_challenger(e_x, e_y):
                                 move_cnt += 1
                             break
                 if signal == 0:
-                    test[i][j] = board[i][j]
+                    for x in board[i][j]:
+                        test[i][j].append(x)
             else:
                 if board[i][j]:
                     for x in board[i][j]:
@@ -73,6 +74,7 @@ def rotate(x, y, mindist):
     for i in range(x, x + mindist):
         for j in range(y, y + mindist):
             board[i][j] = test[i-x][j-y]
+            board[i][j].sort()
             if board[i][j] and 1 <= board[i][j][0] <= 9:
                 board[i][j][0] -= 1
 
@@ -84,6 +86,8 @@ def rotate_maze(e_x, e_y):
             board[i][j].sort()
             if board[i][j] and board[i][j][-1] == 10:
                 mindist = min(mindist, max(abs(e_x - i) + 1, abs(e_y - j) + 1))
+    if mindist == 23587345:
+        return
     #2 구한 정사각형 크기에 맞고, 조건에 맞는 왼쪽 최상단 좌표를 구하자
     for i in range(N):
         for j in range(N):
@@ -92,7 +96,8 @@ def rotate_maze(e_x, e_y):
             for x in range(i, i + mindist):
                 for y in range(j, j + mindist):
                     if x < N and y < N:
-                        if board[x][y] and board[x][y][-1] == 10:
+                        board[x][y].sort()
+                        if board[x][y] and 10 in board[x][y]:
                             flag_1 = 1
                         if board[x][y] and board[x][y][-1] == -1:
                             flag_2 = 1
@@ -110,14 +115,15 @@ def is_Finished():
 
 for turn in range(1, K + 1):
     e_x, e_y = find_exit()
+
     move_challenger(e_x, e_y)
-    # for x in board:
-    #     print(x, end = ' ')
-    #     print()
-    # print()
-    rotate_maze(e_x, e_y)
+
     if is_Finished() == True:
         break
+    rotate_maze(e_x, e_y)
+
+
+
 exit = []
 for i in range(N):
     for j in range(N):
