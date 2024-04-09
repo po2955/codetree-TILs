@@ -68,7 +68,7 @@ def rotate():
     for i in range(0, n // 2):
         for j in range(n//2 + 1, n):
             ret[j-(n//2 + 1)][len(ret) - i - 1] = board[i][j]
-
+            
     for i in range(0, n // 2):
         for j in range(n // 2 + 1, n):
             board[i][j] = ret[i][j - (n//2 + 1)]
