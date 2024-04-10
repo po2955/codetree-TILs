@@ -18,10 +18,6 @@ for i in range(1, m + 1):
     board[xs-1][ys-1].sort()
     board[xe-1][ye-1].append(-1 * i * 1000)
     board[xe-1][ye-1].sort()
-# for x in board:
-#     print(x, end = ' ')
-#     print()
-# print()
 def find_car():
     for i in range(n):
         for j in range(n):
@@ -66,6 +62,8 @@ def move_passenger(px, py, passenger):
                         return
                     arrive(nx, ny)
                     return
+    signal = 1
+    return
 
 def find_passenger(car_x, car_y):
     global use_battery, signal, battery
@@ -89,6 +87,9 @@ def find_passenger(car_x, car_y):
                 Q.append((nx, ny))
                 if board[nx][ny][-1] >= 1000:
                     check.append((nx, ny, visited[nx][ny]))
+    if not check:
+        signal = 1
+        return
     check = sorted(check, key = lambda x :(x[2], x[0], x[1]))
     nx, ny, use = check[0][0], check[0][1], check[0][2]
     passenger = board[nx][ny][-1]
