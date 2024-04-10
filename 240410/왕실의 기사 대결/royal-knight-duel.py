@@ -84,6 +84,9 @@ def move_knight(kn, d):
                                         a.append(knight[x][y])
                     next_xy.append(xxyy)
     test = [[0] * L for _ in range(L)]
+    if not next_xy:
+        flag = 1
+        return
     for i in range(len(xy_num)):
         for k in range(len(next_xy[i])):
             x, y = next_xy[i][k][0], next_xy[i][k][1]
