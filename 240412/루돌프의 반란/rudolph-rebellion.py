@@ -37,8 +37,8 @@ def communication_santa(Santa, Sx, Sy, d):
             communication(board[nx][ny], nx, ny, d)
             board[nx][ny] = S
     else:
-        santa_live[board[nx][ny]] = 0
-        board[nx][ny] = Santa
+        santa_live[S] = 0
+        # board[nx][ny] = Santa
 
 def communication(Santa, Sx, Sy, d):
     global santa_live
@@ -48,13 +48,13 @@ def communication(Santa, Sx, Sy, d):
     # print(Santa, nx, ny)
     if 0 <= nx < N and 0 <= ny < N:
         if board[nx][ny] == 0:
-            board[nx][ny] = S
+            board[nx][ny] = Santa
         elif board[nx][ny] != 0:
             communication(board[nx][ny], nx, ny, d)
-            board[nx][ny] = S
+            board[nx][ny] = Santa
     else:
-        santa_live[board[nx][ny]] = 0
-        board[nx][ny] = Santa
+        santa_live[S] = 0
+        # board[nx][ny] = Santa
 
 def crush_rudolph(Santa, Rx, Ry, d):
     global santa_point, santa_live,santa_stun
@@ -70,6 +70,7 @@ def crush_rudolph(Santa, Rx, Ry, d):
             board[nx][ny] = Santa
     else:
         santa_live[Santa] = 0
+
 def move_rudolph(r_x, r_y):
     santa = []
     for i in range(N):
@@ -89,14 +90,13 @@ def move_rudolph(r_x, r_y):
                 distance = (nx - santa_x)**2 + (ny - santa_y)**2
                 Rx, Ry = nx, ny
                 d = i
+    board[r_x][r_y] = 0
     if board[Rx][Ry] == 0:
         board[Rx][Ry] = -1
-        board[r_x][r_y] = 0
     else:
         S = board[Rx][Ry]
         crush_rudolph(S,Rx,Ry,d)
         board[Rx][Ry] = -1
-        board[r_x][r_y] = 0
 
 def crush_santa(S, Sx, Sy, d):
     global santa_live, santa_stun, santa_point
@@ -109,7 +109,7 @@ def crush_santa(S, Sx, Sy, d):
         if board[nx][ny] == 0:
             board[nx][ny] = S
         else:
-            communication_santa(S,nx,ny,d)
+            communication_santa(board[nx][ny],nx,ny,d)
             board[nx][ny] = S
     else:
         santa_live[S] = 0
@@ -139,7 +139,6 @@ def move_santa(S, r_x, r_y):
                     crush_santa(S, Nx, Ny, d)
                     return
 
-
 for turn in range(1, M + 1):
     r_x, r_y = find_rudolph()
     move_rudolph(r_x, r_y)
@@ -148,18 +147,17 @@ for turn in range(1, M + 1):
         if santa_live[santa] == 0 or santa_stun[santa] != 0:
             continue
         move_santa(santa, r_x, r_y)
-    # for x in board:
-    #     print(x, end=' ')
-    #     print()
-    # print()
-
     flag = 0
     for i in range(1, len(santa_stun)):
         if santa_stun[i] > 0:
             santa_stun[i] -= 1
-        if santa_live[i] != 0:
+        if santa_live[i] == 1:
             santa_point[i] += 1
-            flag = 1
+    flag = 0
+    for i in range(N):
+        for j in range(N):
+            if board[i][j] > 0:
+                flag = 1
     if flag == 0:
         break
 
