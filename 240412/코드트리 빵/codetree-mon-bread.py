@@ -26,19 +26,23 @@ def find_base(t):
                 Q = deque()
                 Q.append((i, j))
                 visited = [[0] * n for _ in range(n)]
-                visited[i][j] = 1
+                visited[i][j] = -1
+                check = []
                 while Q:
                     temp = Q.popleft()
                     for k in range(4):
                         nx = temp[0] + dx[k]
                         ny = temp[1] + dy[k]
                         if 0 <= nx < n and 0 <= ny < n and visited[nx][ny] == 0 and board[nx][ny] >= 0:
+                            visited[nx][ny] = visited[temp[0]][temp[1]] + 1
                             if board[nx][ny] == 1:
-                                board[nx][ny] = -1
-                                board_people[nx][ny].append(time)
-                                return
+                                check.append((visited[nx][ny], nx, ny))
                             Q.append((nx, ny))
-                            visited[nx][ny] = 1
+                if check:
+                    check = sorted(check, key = lambda x: (x[0], x[1], x[2]))
+                x ,y = check[0][1], check[0][2]
+                board[x][y] = -1
+                board_people[x][y].append(t)
 
 def move_people():
     global board, board_people
@@ -76,7 +80,6 @@ def move_people():
                                             test_people[xx][yy].append(people)
                                             signal = 1
                                             break
-
                                     if signal == 1:
                                         break
                                 Q.append((nx, ny))
