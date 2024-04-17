@@ -59,8 +59,8 @@ def rotate_270(x, y):
     for i in range(x, x + 3):
         for j in range(y, y + 3):
             ret[3-1-(j-y)][i-x] = board[i][j]
-    for i in range(x, y):
-        for j in range(x, y):
+    for i in range(x, x+3):
+        for j in range(y, y+3):
             test_board[i][j] = ret[i - x][j - y]
     check_point(test_board, x + 1, y + 1, 270)
 
@@ -69,7 +69,7 @@ def real_rotate_90(x, y):
     test_board = deepcopy(board)
     ret = [[0] * 3 for _ in range(3)]
     for i in range(x, x + 3):
-        for j in range(y, y + 3) :
+        for j in range(y, y + 3):
             ret[j - y][3 - 1 - (i - x)] = board[i][j]
     for i in range(x, x + 3):
         for j in range(y, y + 3):
@@ -166,6 +166,7 @@ def is_Finished():
                     return False
     return True
 
+signal = 0
 for turn in range(1, K + 1):
     check = []
     answer = 0
