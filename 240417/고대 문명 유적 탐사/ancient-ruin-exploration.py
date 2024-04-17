@@ -178,8 +178,8 @@ for turn in range(1, K + 1):
             rotate_270(i, j)
     if check:
         check = sorted(check, key = lambda x : (-x[0], x[1], x[2], x[3]))
-    else:
-        break
+        if check[0][0] == 0:
+            break
     x, y, angle = check[0][3], check[0][2], check[0][1]
     if angle == 90:
         real_rotate_90(x - 1, y - 1)
