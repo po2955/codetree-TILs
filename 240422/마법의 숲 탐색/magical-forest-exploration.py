@@ -59,7 +59,7 @@ def drop(i, j, d, t):
 def check_out():
     for i in range(2):
         for j in range(C):
-            if board[i][j] > 0:
+            if board[i][j] != 0:
                 return True
     return False
 
@@ -69,7 +69,6 @@ def clear():
 
 def count_point():
     global answer, check, visited
-    check = []
     for i in range(R+2):
         for j in range(C):
             if board_robot[i][j] == 1:
@@ -83,7 +82,7 @@ def count_point():
                         for q in range(4):
                             nnx = nx + dx[q]
                             nny = ny + dy[q]
-                            if 0 <= nnx < R+2 and 0 <= nny < C and board[i][j] != board[nnx][nny] and board[nnx][nny] != 0 and visited[nnx][nny] == 0:
+                            if 0 <= nnx < R+2 and 0 <= nny < C and abs(board[i][j]) != abs(board[nnx][nny]) and board[nnx][nny] != 0 and visited[nnx][nny] == 0:
                                 for p in range(4):
                                     nnnx = nnx + dx[p]
                                     nnny = nny + dy[p]
