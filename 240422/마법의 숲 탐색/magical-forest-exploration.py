@@ -83,11 +83,11 @@ def count_point():
                         for q in range(4):
                             nnx = nx + dx[q]
                             nny = ny + dy[q]
-                            if 0 <= nnx < R+2 and 0 <= nny < C and board[i][j] != board[nnx][nny] and board[nnx][nny] > 0 and visited[nnx][nny] == 0:
+                            if 0 <= nnx < R+2 and 0 <= nny < C and board[i][j] != board[nnx][nny] and board[nnx][nny] != 0 and visited[nnx][nny] == 0:
                                 for p in range(4):
                                     nnnx = nnx + dx[p]
                                     nnny = nny + dy[p]
-                                    if 0 <= nnnx < R+2 and 0 <= nny < C and board[nnx][nny] == board[nnnx][nnny] and visited[nnnx][nnny] == 0:
+                                    if 0 <= nnnx < R+2 and 0 <= nny < C and abs(board[nnx][nny]) == abs(board[nnnx][nnny]) and visited[nnnx][nnny] == 0:
                                         board_robot[nnnx][nnny] = 1
                                         count_point()
                                         return
@@ -109,5 +109,6 @@ for turn in range(1, K + 1):
     count_point()
     if check:
         answer += max(check)
+    # print(answer)
 
 print(answer)
