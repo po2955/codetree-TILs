@@ -89,7 +89,7 @@ def count_point():
                                     if 0 <= nnnx < R+2 and 0 <= nny < C and abs(board[nnx][nny]) == abs(board[nnnx][nnny]) and visited[nnnx][nnny] == 0:
                                         board_robot[nnnx][nnny] = 1
                                         count_point()
-                                        return
+
                             if 0 <= nnx < R+2 and 0 <= nny < C:
                                 visited[nnx][nny] = 1
                     visited[nx][ny] = 1
