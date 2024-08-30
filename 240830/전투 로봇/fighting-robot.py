@@ -43,6 +43,7 @@ def move_robot():
                 visited[i][j] = 0
                 Q = deque()
                 Q.append((i,j))
+                list_check = []
                 while Q:
                     temp = Q.popleft()
                     for k in range(4):
@@ -52,11 +53,15 @@ def move_robot():
                             visited[nx][ny] = visited[temp[0]][temp[1]] + 1
                             Q.append((nx, ny))
                             if 0 < board[nx][ny][-1] < robot_level:
-                                catch_cnt += 1
-                                board[i][j][-1] = 0
-                                board[nx][ny][-1] = 9
-                                time += visited[nx][ny]
-                                return
+                                # print(i,j)
+                                list_check.append((visited[nx][ny], nx, ny))
+                list_check = sorted(list_check, key=lambda x : (x[0],x[1],x[2]))
+                # print(list_check)
+                x, y = list_check[0][1], list_check[0][2]
+                board[x][y][-1] = 9
+                board[i][j][-1] = 0
+                catch_cnt += 1
+                time += list_check[0][0]
                 return
 
 
