@@ -14,10 +14,6 @@ for i in range(n):
     for j in range(n):
         if board[i][j] == -1:
             board[i][j] = -11
-            break
-            signal = 1
-    if signal == 1:
-        break
 
 def grow_tree():
     global board
@@ -68,6 +64,7 @@ def choice_killer():
                             if board[nx][ny] > 0:
                                 cnt += board[nx][ny]
                 check.append((cnt, i, j))
+
     if check:
         check = sorted(check, key = lambda x : (-x[0], x[1], x[2]))
         answer += check[0][0]
@@ -90,7 +87,6 @@ def spread_killer(x, y):
                 else:
                     board[nx][ny] = -(c+1)
 
-
 def count_killer():
     for i in range(n):
         for j in range(n):
@@ -101,6 +97,7 @@ for turn in range(1, m + 1):
     grow_tree()
     spread_tree()
     kill_x, kill_y = choice_killer()
+    # print(kill_x, kill_y, board[kill_x][kill_y])
     if kill_x != -1:
         spread_killer(kill_x, kill_y)
     count_killer()
