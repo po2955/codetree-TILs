@@ -7,7 +7,6 @@ dyc = [-1, 1, 1, -1]
 n, m, k, c = map(int, input().split())
 answer = 0
 board = [list(map(int, input().split())) for _ in range(n)]
-board_killer = [[0] * n for _ in range(n)]
 
 for i in range(n):
     signal = 0
@@ -52,24 +51,24 @@ def choice_killer():
     check = []
     for i in range(n):
         for j in range(n):
-            if board[i][j] > 0:
+            if board[i][j] >= 0:
                 cnt = board[i][j]
+                if board[i][j] == 0:
+                    check.append((cnt, i, j))
+                    continue
                 for q in range(4):
                     for p in range(1, k + 1):
                         nx = i + (dxc[q] * p)
                         ny = j + (dyc[q] * p)
                         if 0 <= nx < n and 0 <= ny < n:
-                            if board[nx][ny] == 0 or board[nx][ny] == -11:
+                            if board[nx][ny] == 0 or board[nx][ny] == -11 or board[nx][ny] < 0:
                                 break
-                            if board[nx][ny] > 0:
+                            elif board[nx][ny] > 0:
                                 cnt += board[nx][ny]
                 check.append((cnt, i, j))
-
-    if check:
-        check = sorted(check, key = lambda x : (-x[0], x[1], x[2]))
-        answer += check[0][0]
-        return check[0][1], check[0][2]
-    return -1, -1
+    check = sorted(check, key = lambda x : (-x[0], x[1], x[2]))
+    answer += check[0][0]
+    return check[0][0], check[0][1], check[0][2]
 
 def spread_killer(x, y):
     global k
@@ -79,7 +78,7 @@ def spread_killer(x, y):
             nx = x + (dxc[q] * p)
             ny = y + (dyc[q] * p)
             if 0 <= nx < n and 0 <= ny < n:
-                if board[nx][ny] == 0:
+                if board[nx][ny] == 0 or -10 <= board[nx][ny] <= -1:
                     board[nx][ny] = -(c+1)
                     break
                 elif board[nx][ny] == -11:
@@ -95,10 +94,23 @@ def count_killer():
 
 for turn in range(1, m + 1):
     grow_tree()
+    # for x in board:
+    #     print(x, end = ' ')
+    #     print()
+    # print()
+
     spread_tree()
-    kill_x, kill_y = choice_killer()
+    # for x in board:
+    #     print(x, end = ' ')
+    #     print()
+    # print()
+    cnt, kill_x, kill_y = choice_killer()
+    # print(kill_x, kill_y)
+    # print('*************************************8')
     # print(kill_x, kill_y, board[kill_x][kill_y])
-    if kill_x != -1:
+    if cnt != 0:
         spread_killer(kill_x, kill_y)
+    else:
+        board[kill_x][kill_y] = -(c+1)
     count_killer()
 print(answer)
