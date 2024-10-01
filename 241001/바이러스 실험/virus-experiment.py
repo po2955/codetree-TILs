@@ -19,8 +19,10 @@ def eat_medi():
                     if board[i][j][q] > 0:
                         board_medi[i][j] -= board[i][j][q]
                         if board_medi[i][j] < 0:
+                            board_medi[i][j] += board[i][j][q]
                             for p in range(q, len(board[i][j])):
                                 board[i][j][p] *= -1
+
                         else:
                             board[i][j][q] += 1
 
