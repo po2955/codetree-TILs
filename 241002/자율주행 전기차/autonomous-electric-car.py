@@ -71,7 +71,11 @@ def move_passenger(x_p, y_p, use):
                             board[nx][ny][i] = 0
                             break
                     board[nx][ny].append(-1)
-                    return
+    for i in range(n):
+        for j in range(n):
+            if board[i][j] and -1 in board[i][j]:
+                return
+    sign = 1
 
 def find_passenger(car_x, car_y):
     global c, sign
