@@ -21,27 +21,34 @@ def go_base(time):
     global cant_base
     store = (time * -1) - 10
     people = time + 10
+    check = []
     for i in range(n):
         for j in range(n):
             if board[i][j] and board[i][j][0] == store:
                 Q = deque()
                 Q.append((i, j))
-                visited = [[0] * n for _ in range(n)]
-                visited[i][j] = 1
+                visited = [[-1] * n for _ in range(n)]
+                visited[i][j] = 0
                 while Q:
                     temp = Q.popleft()
                     for k in range(4):
                         nx = temp[0] + dx[k]
                         ny = temp[1] + dy[k]
-                        if 0 <= nx < n and 0 <= ny < n and visited[nx][ny] == 0:
-                            visited[nx][ny] = 1
+                        if 0 <= nx < n and 0 <= ny < n and visited[nx][ny] == -1 and -1 not in board[nx][ny]:
+                            visited[nx][ny] = visited[temp[0]][temp[1]] + 1
                             Q.append((nx, ny))
                             if 1 in board[nx][ny] and -1 not in board[nx][ny]:
-                                board[nx][ny].append(people)
-                                board[nx][ny].sort()
-                                cant_base.append((nx, ny))
-                                return
-
+                                check.append((visited[nx][ny], nx, ny))
+                                # board[nx][ny].append(people)
+                                # board[nx][ny].sort()
+                                # cant_base.append((nx, ny))
+    if check:
+        check = sorted(check, key = lambda x : (x[0], x[1], x[2]))
+        x, y = check[0][1], check[0][2]
+        board[x][y].append(people)
+        board[x][y].sort()
+        cant_base.append((x, y))
+        
 def move(x, y, store):
     global cant
     people = store * -1
@@ -78,26 +85,27 @@ def move_people():
 def is_Finished():
     for i in range(n):
         for j in range(n):
-            if board[i][j] and board[i][j][0] < -10 and -1 not in board[i][j]:
+            if board[i][j] and board[i][j][0] < -10:
                 return False
     return True
 while 1:
     cant_base = []
-    if time <= m:
-        go_base(time)
     move_people()
-    # base_x, base_y 못지나가게 -1 넣어서 처리해라
-    if cant_base:
-        for x, y in cant_base:
-            board[x][y].append(-1)
-            board[x][y].sort()
     if cant:
         for x, y in cant:
             board[x][y].clear()
             board[x][y].append(-1)
             cant = []
-    time += 1
+    if time <= m:
+        go_base(time)
+    # base_x, base_y 못지나가게 -1 넣어서 처리해라
+    if cant_base:
+        for x, y in cant_base:
+            board[x][y].append(-1)
+            board[x][y].sort()
+
     if is_Finished() == True:
         break
+    time += 1
 
 print(time)
