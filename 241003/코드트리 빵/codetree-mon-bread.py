@@ -37,18 +37,15 @@ def go_base(time):
                         if 0 <= nx < n and 0 <= ny < n and visited[nx][ny] == -1 and -1 not in board[nx][ny]:
                             visited[nx][ny] = visited[temp[0]][temp[1]] + 1
                             Q.append((nx, ny))
-                            if 1 in board[nx][ny] and -1 not in board[nx][ny]:
+                            if 1 in board[nx][ny]:
                                 check.append((visited[nx][ny], nx, ny))
-                                # board[nx][ny].append(people)
-                                # board[nx][ny].sort()
-                                # cant_base.append((nx, ny))
     if check:
         check = sorted(check, key = lambda x : (x[0], x[1], x[2]))
         x, y = check[0][1], check[0][2]
         board[x][y].append(people)
         board[x][y].sort()
         cant_base.append((x, y))
-        
+
 def move(x, y, store):
     global cant
     people = store * -1
@@ -56,14 +53,23 @@ def move(x, y, store):
     Q.append((x, y))
     visited = [[-1] * n for _ in range(n)]
     visited[x][y] = 0
+    check = []
     while Q:
         temp = Q.popleft()
         for k in range(4):
             nx = temp[0] + dx[k]
             ny = temp[1] + dy[k]
-            if 0 <= nx < n and 0 <= ny < n and visited[nx][ny] == -1:
-                if -1 in board[nx][ny] and people not in board[nx][ny]:
-                    continue
+            if 0 <= nx < n and 0 <= ny < n and people in board[nx][ny]:
+                for i in range(len(board[nx][ny])):
+                    if board[nx][ny][i] == people:
+                        board[nx][ny][i] = 0
+                        break
+                board[temp[0]][temp[1]].append(people)
+                board[temp[0]][temp[1]].sort()
+                if temp[0] == x and temp[1] == y:
+                    cant.append((x, y))
+                return
+            if 0 <= nx < n and 0 <= ny < n and visited[nx][ny] == -1 and -1 not in board[nx][ny]:
                 visited[nx][ny] = visited[temp[0]][temp[1]]
                 Q.append((nx, ny))
                 if people in board[nx][ny]:
@@ -72,9 +78,11 @@ def move(x, y, store):
                             board[nx][ny][i] = 0
                             break
                     board[temp[0]][temp[1]].append(people)
-                    if temp[0] == x and temp[1] == y:
-                        cant.append((x, y))
-                    return
+                    check.append((visited[temp[0]][temp[1]], temp[0], temp[1]))
+    if check:
+        check = sorted(key = lambda x : ((x[0], x[1], x[2])))
+        a, b = check[0][1], check[0][2]
+        board[a][b].append(people)
 
 def move_people():
     for i in range(n):
@@ -93,17 +101,20 @@ while 1:
     move_people()
     if cant:
         for x, y in cant:
-            board[x][y].clear()
+            cnt = 0
+            for i in range(len(board[x][y])):
+                if board[x][y][i] > 10:
+                    cnt += 1
+            if cnt <= 1:
+                board[x][y].clear()
             board[x][y].append(-1)
             cant = []
     if time <= m:
         go_base(time)
-    # base_x, base_y 못지나가게 -1 넣어서 처리해라
     if cant_base:
         for x, y in cant_base:
             board[x][y].append(-1)
             board[x][y].sort()
-
     if is_Finished() == True:
         break
     time += 1
