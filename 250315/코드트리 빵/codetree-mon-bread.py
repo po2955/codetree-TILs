@@ -30,7 +30,7 @@ def find_store(people):
                 return i, j
 
 def move_people():
-    global cant_move
+    global cant_move, move
     for i in range(n):
         for j in range(n):
             if board_people[i][j]:
@@ -64,7 +64,8 @@ def move_people():
                     if move_x == store_x and move_y == store_y:
                         cant_move.append((store_x, store_y))
                     else:
-                        board_people[move_x][move_y].append(people)
+                        # board_people[move_x][move_y].append(people)
+                        move.append((people, move_x, move_y))
 
 def go_base(people):
     for i in range(n):
@@ -88,10 +89,19 @@ def go_base(people):
                 base.sort(key = lambda x : (x[0], x[1], x[2]))
                 base_x, base_y = base[0][1], base[0][2]
                 board_people[base_x][base_y].append(people)
-                board[base_x][base_y] = -1000
+                # board[base_x][base_y] = -1000
+                cant_move.append((base_x, base_y))
 while 1:
     cant_move = []
+    move = []
     move_people()
+    if cant_move:
+        for x, y in cant_move:
+            board[x][y] = -board[x][y]
+    if move:
+        for people, x, y in move:
+            board_people[x][y].append(people)
+    cant_move = []
     if time <= m:
         go_base(time)
     if is_Finished() == True:
