@@ -53,6 +53,10 @@ def move_people():
                                         sign = 1
                                         move_x, move_y = temp[0], temp[1]
                                         break
+                                    else:
+                                        continue
+                                elif board[nx][ny] < 0:
+                                    continue
                                 elif nx == i and ny == j:
                                     sign = 1
                                     move_x, move_y = temp[0], temp[1]
