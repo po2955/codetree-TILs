@@ -30,18 +30,18 @@ def compose_atom():
         for j in range(n):
             if board[i][j] and len(board[i][j]) >= 2:
                 M, S = 0, 0
+                check = board[i][j][0][2] % 2
                 sign = 0
                 for k in range(len(board[i][j])):
                     M += board[i][j][k][0]
                     S += board[i][j][k][1]
-                    if k != len(board[i][j]) - 1 and sign == 0:
-                        if board[i][j][k][2] % 2 != board[i][j][k+1][2] % 2:
-                            sign = 1
+                    if check != board[i][j][k][2] % 2:
+                        sign = 1
                 M = M // 5
                 S = S // len(board[i][j])
                 if M == 0:
                     board[i][j] = []
-                    return
+                    continue
                 if sign == 0:
                     board[i][j] = []
                     for k in range(0, 7, 2):
