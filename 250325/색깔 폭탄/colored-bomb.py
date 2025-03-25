@@ -54,6 +54,7 @@ def find_package():
                 bomb_cnt = 1
                 visited[i][j] = 1
                 package = [(i, j)]
+                visited_red = []
                 red = 0
                 while Q:
                     temp = Q.popleft()
@@ -69,7 +70,10 @@ def find_package():
                                 if board[nx][ny] == 0:
                                     red += 1
                                     package.pop()
-                                    visited[nx][ny] = 0
+                                    visited_red.append((nx, ny))
+                if visited_red:
+                    for x, y in visited_red:
+                        visited[x][y] = 0
                 if bomb_cnt >= 2:
                     package.sort(key = lambda x : ((-x[0], x[1])))
                     a, b = package[0][0], package[0][1]
@@ -98,11 +102,12 @@ def gravity():
                     nx += 1
                 if nx != i:
                     board[nx][j] = board[i][j]
-                    board[i][j] = -2     
+                    board[i][j] = -2       
 while 1:
     if is_Finished() == True:
         break
     find_package()
+    gravity()
     rotate_270()
     gravity()
 print(point)
