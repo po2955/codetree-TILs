@@ -68,6 +68,7 @@ def kill(spray):
 def spray_weedkiller():
     global answer
     max = -3456323434
+    spray = (-1, -1)
     for i in range(n):
         for j in range(n):
             if board[i][j] > 0:
@@ -85,8 +86,9 @@ def spray_weedkiller():
                 if cnt > max:
                     max = cnt
                     spray = (i, j)
-    kill(spray)
-    answer += max
+    if spray != (-1, -1):
+        kill(spray)
+        answer += max
                                 
 def count_weedkiller():
     for i in range(n):
