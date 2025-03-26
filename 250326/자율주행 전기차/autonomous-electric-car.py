@@ -89,15 +89,15 @@ def move_passenger(passenger_x, passenger_y):
                     continue
                 Q.append((nx, ny))
                 visited[nx][ny] = visited[temp[0]][temp[1]] + 1
-                if board[nx][ny] and  -passenger in board[nx][ny]:
+                if board[nx][ny] and -passenger in board[nx][ny]:
                     battery -= visited[nx][ny]
                     if battery < 0:
                         sign = 1
                         return
                     else:
                         battery += visited[nx][ny] * 2
-                    board[nx][ny].pop()
-                    board[nx][ny].append(-1000)
+                        board[nx][ny].remove(-passenger)
+                        board[nx][ny].append(-1000)
                     return True
     return False
 sign = 0
@@ -112,7 +112,7 @@ while 1:
     if passenger_x == -1:
         sign = 1
         break
-    if passenger_x != -1:
+    elif passenger_x != -1:
         if move_passenger(passenger_x, passenger_y) == False:
             sign = 1
 
