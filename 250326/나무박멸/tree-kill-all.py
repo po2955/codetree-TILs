@@ -43,13 +43,11 @@ def spread():
                         if (x, y) not in spread_tree:
                             spread_tree.append((x, y))
     for x, y in spread_tree:
-        board[x][y] += test[x][y]
-        if (x, y) in check_blank:
-            check_blank.remove((x, y))
+        board[x][y] = test[x][y]
 
 def kill(spray):
     x, y = spray
-    board[x][y] = -c
+    board[x][y] = -c - 1
     for q in range(1, 8, 2):
         nx = x
         ny = y
@@ -59,7 +57,7 @@ def kill(spray):
             if 0 <= nx < n and 0 <= ny < n:
                 if board[nx][ny] == -1000:
                     break
-                elif board[nx][ny] == 0 or (nx, ny) in check_blank:
+                elif board[nx][ny] <= 0:
                     board[nx][ny] = -c - 1
                     break
                 else:
@@ -67,8 +65,8 @@ def kill(spray):
 
 def spray_weedkiller():
     global answer
-    max = -3456323434
     spray = (-1, -1)
+    check = []
     for i in range(n):
         for j in range(n):
             if board[i][j] > 0:
@@ -80,15 +78,15 @@ def spray_weedkiller():
                         nx = nx + dx[q]
                         ny = ny + dy[q]
                         if 0 <= nx < n and 0 <= ny < n:
-                            if board[nx][ny] == -1000 or board[nx][ny] == 0 or (nx, ny) in check_blank: break
+                            if board[nx][ny] <= 0: break
                             elif board[nx][ny] > 0:
                                 cnt += board[nx][ny]
-                if cnt > max:
-                    max = cnt
-                    spray = (i, j)
-    if spray != (-1, -1):
+                check.append((cnt, i, j))
+    if check:
+        check.sort(key = lambda x : (-x[0], x[1], x[2]))
+        spray = (check[0][1], check[0][2])
         kill(spray)
-        answer += max
+        answer += check[0][0]
                                 
 def count_weedkiller():
     for i in range(n):
@@ -99,12 +97,19 @@ def count_weedkiller():
 for turn in range(1, m + 1):
     count_weedkiller()
     grow_tree()
-    
+    # for x in board:
+    #     print(x, end = ' ')
+    #     print()
+    # print(' ')
     spread()
     # for x in board:
     #     print(x, end = ' ')
     #     print()
-    # print()
+    # print('')
     spray_weedkiller()
+    # for x in board:
+    #     print(x, end = ' ')
+    #     print()
+    # print('-----------------------')
 
 print(answer)
