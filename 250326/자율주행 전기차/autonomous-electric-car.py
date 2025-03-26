@@ -89,7 +89,7 @@ def move_passenger(passenger_x, passenger_y):
                     continue
                 Q.append((nx, ny))
                 visited[nx][ny] = visited[temp[0]][temp[1]] + 1
-                if board[nx][ny] and board[nx][ny][-1] == -passenger:
+                if board[nx][ny] and  -passenger in board[nx][ny]:
                     battery -= visited[nx][ny]
                     if battery < 0:
                         sign = 1
