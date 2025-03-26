@@ -98,7 +98,8 @@ def move_passenger(passenger_x, passenger_y):
                         battery += visited[nx][ny] * 2
                     board[nx][ny].pop()
                     board[nx][ny].append(-1000)
-                    return
+                    return True
+    return False
 sign = 0
 while 1:
     if is_Finished() == True or sign == 1:
@@ -112,7 +113,8 @@ while 1:
         sign = 1
         break
     if passenger_x != -1:
-        move_passenger(passenger_x, passenger_y)
+        if move_passenger(passenger_x, passenger_y) == False:
+            sign = 1
 
 if sign == 1:
     print(-1)
